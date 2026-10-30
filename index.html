@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vizinho PRO</title>
+<meta name="description" content="O profissional de confiança do seu bairro.">
+<meta name="theme-color" content="#1463F3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Vizinho PRO">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#1463F3; --brand-strong:#0B4FD1; --navy:#0A1F4D; --navy-2:#123372;
+  --bg:#EEF2F9; --surface:#FFFFFF; --surface-2:#F5F7FC; --text:#0E1A33; --muted:#5B6782;
+  --line:#DFE5F0; --soft:#E5EEFF; --soft-text:#0B4FD1; --star:#F5A524; --ok:#12A16B; --ok-soft:#DDF5EA;
+  --warn:#C2410C; --warn-soft:#FFEDE3; --map:#E9EEF6; --street:#FFFFFF; --park:#D6EBD9;
+  color-scheme:light;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#070F22; --surface:#101C36; --surface-2:#16244A; --text:#EAF0FF; --muted:#9AA8C7; --line:#22335C;
+  --soft:#16305F; --soft-text:#9CC0FF; --ok-soft:#0F3A2A; --warn-soft:#3B1E10; --warn:#FF9A62;
+  --map:#14223F; --street:#1E3058; --park:#16382A; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#070F22; --surface:#101C36; --surface-2:#16244A; --text:#EAF0FF; --muted:#9AA8C7; --line:#22335C;
+  --soft:#16305F; --soft-text:#9CC0FF; --ok-soft:#0F3A2A; --warn-soft:#3B1E10; --warn:#FF9A62;
+  --map:#14223F; --street:#1E3058; --park:#16382A; color-scheme:dark;}
+*{box-sizing:border-box;margin:0}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;background:var(--bg);color:var(--text);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:8px}
+#app{max-width:440px;height:100%;margin:0 auto;background:var(--bg);display:flex;flex-direction:column;position:relative;overflow:hidden}
+@media (min-width:480px){#app{box-shadow:0 0 0 1px var(--line)}}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.pad{padding:0 18px}
+svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+/* header */
+.hdr{display:flex;align-items:center;gap:10px;padding:14px 18px 10px;background:var(--surface);border-bottom:1px solid var(--line)}
+.hdr h1{font-size:17px;font-weight:700;flex:1}
+.iconbtn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;color:var(--text)}
+.iconbtn:active{background:var(--surface-2)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:19px;letter-spacing:-.02em;flex:1}
+.brand b{color:var(--brand)}
+/* nav */
+.nav{display:flex;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px 8px}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--muted);padding:6px 0;position:relative}
+.nav button.on{color:var(--brand)}
+.nav .dot{position:absolute;top:4px;right:calc(50% - 16px);width:8px;height:8px;border-radius:50%;background:var(--warn)}
+/* buttons */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 18px;border-radius:14px;background:var(--brand);color:#fff;font-weight:700;font-size:15px}
+.btn:active{background:var(--brand-strong)}
+.btn.ghost{background:transparent;color:var(--brand);box-shadow:inset 0 0 0 1.5px var(--brand)}
+.btn.quiet{background:var(--surface-2);color:var(--text)}
+.btn.ok{background:var(--ok)}
+.btn.sm{padding:9px 14px;font-size:14px;border-radius:11px;width:auto}
+.btn[disabled]{opacity:.45;pointer-events:none}
+/* blocks */
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:22px 18px 10px}
+.sec h2{font-size:16px;font-weight:700}
+.sec button{color:var(--brand);font-weight:600;font-size:13px}
+.panel{background:var(--surface);border-radius:18px;border:1px solid var(--line)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.tiny{font-size:12px}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--soft);color:var(--soft-text);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.star{color:var(--star)}
+.av{border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:none;letter-spacing:-.02em}
+/* segmented */
+.seg{display:flex;background:var(--surface-2);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;padding:10px 6px;border-radius:11px;font-weight:700;font-size:14px;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
+.seg button.on{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(10,31,77,.12)}
+.seg button.on.urg{color:var(--warn)}
+/* search */
+.searchbar{display:flex;align-items:center;gap:10px;padding:13px 14px;border-radius:14px;background:var(--surface);border:1.5px solid var(--line);color:var(--muted);width:100%;text-align:left;font-size:14.5px}
+.searchbar .ai{margin-left:auto;color:var(--brand)}
+/* categories */
+.cats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0 12px}
+.cat{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 0}
+.cat span{width:52px;height:52px;border-radius:16px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--brand)}
+/* banner */
+.banner{margin:18px 18px 0;background:linear-gradient(135deg,var(--navy),var(--navy-2));color:#fff;border-radius:18px;padding:16px;display:flex;gap:14px;align-items:center;width:calc(100% - 36px);text-align:left}
+.banner .ic{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.12);display:grid;place-items:center;flex:none}
+.banner strong{display:block;font-size:15px}
+.banner p{font-size:12.5px;opacity:.85}
+/* horizontal cards */
+.hscroll{display:flex;gap:12px;overflow-x:auto;padding:2px 18px 6px;scrollbar-width:none}
+.hscroll::-webkit-scrollbar{display:none}
+.hcard{flex:none;width:150px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px}
+/* pro row */
+.list{display:flex;flex-direction:column;gap:10px;padding:0 18px}
+.prow{display:flex;gap:12px;padding:14px;text-align:left;width:100%;align-items:flex-start}
+.prow .body{flex:1;min-width:0}
+.prow .name{font-weight:700;font-size:15px;display:flex;align-items:center;gap:5px}
+.meta{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12.5px;color:var(--muted);margin-top:3px;align-items:center}
+.pills{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.price{font-weight:700;font-size:13.5px;margin-top:6px}
+.verified{color:var(--brand)}
+/* chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:12px 18px 4px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;padding:8px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);font-size:13px;font-weight:600;white-space:nowrap}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+/* map */
+.map{position:relative;height:190px;background:var(--map);overflow:hidden}
+.map svg.bg{position:absolute;inset:0;width:100%;height:100%}
+.mpin{position:absolute;transform:translate(-50%,-100%);width:34px;height:34px;border-radius:50% 50% 50% 4px;rotate:-45deg;background:var(--brand);border:3px solid #fff;box-shadow:0 3px 8px rgba(10,31,77,.3);display:grid;place-items:center}
+.mpin b{rotate:45deg;color:#fff;font-size:11px;font-weight:800}
+.mpin.woman{background:#C2417A}
+.me-dot{position:absolute;left:50%;top:55%;width:16px;height:16px;border-radius:50%;background:var(--brand);border:3px solid #fff;transform:translate(-50%,-50%);box-shadow:0 0 0 18px rgba(20,99,243,.15)}
+.maplabel{position:absolute;top:10px;right:10px;background:var(--surface);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:99px;color:var(--muted)}
+/* profile */
+.phead{background:var(--surface);padding:6px 18px 18px;text-align:center;border-bottom:1px solid var(--line)}
+.phead h2{font-size:22px;letter-spacing:-.02em;display:flex;justify-content:center;align-items:center;gap:6px;margin-top:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.stats div{font-size:12px;color:var(--muted)}
+.stats strong{display:block;font-size:16px;color:var(--text)}
+.nbadge{display:flex;gap:10px;align-items:center;background:var(--ok-soft);color:var(--text);border-radius:14px;padding:12px 14px;margin:14px 18px 0;font-size:13.5px;text-align:left}
+.nbadge .ic{color:var(--ok)}
+.tabs{display:flex;border-bottom:1px solid var(--line);margin:14px 18px 0}
+.tabs button{flex:1;padding:11px 0;font-weight:600;font-size:14px;color:var(--muted);border-bottom:2.5px solid transparent;margin-bottom:-1px}
+.tabs button.on{color:var(--brand);border-color:var(--brand)}
+.tabbody{padding:16px 18px 24px}
+.tabbody p{margin-bottom:12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{padding:6px 11px;border-radius:99px;border:1px solid var(--line);font-size:12.5px;font-weight:500;background:var(--surface)}
+.review{padding:12px 0;border-bottom:1px solid var(--line)}
+.review:last-child{border:0}
+.svc{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
+.footer{display:flex;gap:10px;padding:12px 18px;background:var(--surface);border-top:1px solid var(--line)}
+/* chat */
+.msgs{display:flex;flex-direction:column;gap:10px;padding:16px 14px}
+.msg{max-width:82%;padding:10px 13px;border-radius:16px;font-size:14.5px}
+.msg.pro{background:var(--surface);border:1px solid var(--line);border-bottom-left-radius:5px;align-self:flex-start}
+.msg.me{background:var(--brand);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+.msg time{display:block;font-size:10.5px;opacity:.65;margin-top:3px;text-align:right}
+.quote{align-self:flex-start;width:86%;background:var(--surface);border:1.5px solid var(--brand);border-radius:16px;padding:14px}
+.quote .val{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:4px 0}
+.notice{display:flex;gap:10px;align-items:center;background:var(--soft);color:var(--soft-text);font-size:12.5px;font-weight:600;padding:10px 14px}
+.composer{display:flex;gap:8px;padding:10px 12px;background:var(--surface);border-top:1px solid var(--line);align-items:center}
+.composer input{flex:1;padding:12px 14px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface-2);outline:none}
+.composer input:focus{border-color:var(--brand)}
+.send{width:44px;height:44px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;flex:none}
+.typing{align-self:flex-start;font-size:12.5px;color:var(--muted);padding:4px 6px}
+/* timeline */
+.tl{padding:6px 18px 0}
+.step{display:flex;gap:12px;position:relative;padding-bottom:18px}
+.step:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:2px;width:2px;background:var(--line)}
+.step.done:not(:last-child)::before{background:var(--ok)}
+.step .b{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;flex:none;background:var(--surface);border:2px solid var(--line);color:var(--muted);font-size:12px;font-weight:800}
+.step.done .b{background:var(--ok);border-color:var(--ok);color:#fff}
+.step.now .b{border-color:var(--brand);color:var(--brand);box-shadow:0 0 0 4px var(--soft)}
+.step strong{font-size:14.5px;display:block}
+.step:not(.done):not(.now) strong{color:var(--muted);font-weight:600}
+/* misc */
+.field{width:100%;padding:13px 14px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);outline:none;resize:none}
+.field:focus{border-color:var(--brand)}
+.toggle{display:flex;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);width:100%;text-align:left}
+.toggle:last-child{border:0}
+.toggle .t{flex:1}
+.toggle .t span{display:block;font-size:12.5px;color:var(--muted)}
+.sw{width:46px;height:28px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw.on{background:var(--brand)}
+.sw.on::after{transform:translateX(18px)}
+.feat{display:flex;gap:14px;padding:14px 16px;align-items:flex-start}
+.feat .ic{width:44px;height:44px;border-radius:50%;background:var(--soft);color:var(--brand);display:grid;place-items:center;flex:none}
+.feat strong{display:block;font-size:14.5px}
+.empty{text-align:center;padding:48px 28px}
+.empty .ic{width:64px;height:64px;border-radius:20px;background:var(--soft);color:var(--brand);display:grid;place-items:center;margin:0 auto 14px}
+.rate{display:flex;gap:6px;justify-content:center;margin:10px 0}
+.rate button{font-size:34px;color:var(--line);line-height:1}
+.rate button.on{color:var(--star)}
+#toast{position:absolute;left:50%;bottom:90px;transform:translate(-50%,20px);background:var(--navy);color:#fff;padding:11px 18px;border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;width:max-content;max-width:88%;text-align:center;z-index:20}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+/* splash */
+.splash{flex:1;background:radial-gradient(120% 70% at 50% 0%,#1B4FB8 0%,var(--navy) 55%,#061535 100%);color:#fff;display:flex;flex-direction:column;padding:0 26px 28px;overflow:auto}
+.splash .hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;min-height:340px}
+.splash h1{font-size:40px;font-weight:800;letter-spacing:-.035em;line-height:1}
+.splash h1 b{color:#5C9BFF}
+.splash p{font-size:17px;opacity:.85;max-width:260px}
+.skyline{display:flex;align-items:flex-end;gap:5px;height:70px;opacity:.35;margin-bottom:22px;justify-content:center}
+.skyline i{display:block;width:22px;background:linear-gradient(#5C9BFF,transparent);border-radius:3px 3px 0 0}
+.splash .btn.ghost{color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7)}
+.logo-anim{animation:pop .7s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.logo-anim{animation:none}#toast,.sw,.sw::after{transition:none}}
+/* pro mode */
+.prohero{background:linear-gradient(160deg,var(--navy),var(--navy-2));color:#fff;padding:18px 18px 22px}
+.prohero .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px}
+.prohero .kpis div{background:rgba(255,255,255,.1);border-radius:14px;padding:11px;font-size:11.5px;opacity:.95}
+.prohero .kpis strong{display:block;font-size:17px}
+.req{padding:14px;display:flex;flex-direction:column;gap:8px}
+.qr{width:180px;height:180px;margin:0 auto;background:#fff;padding:10px;border-radius:14px}
+.code{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;word-break:break-all;background:var(--surface-2);padding:10px 12px;border-radius:10px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+const I = {
+  bolt:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+  spark:'<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+  roller:'<rect x="4" y="3" width="14" height="6" rx="1.5"/><path d="M18 6h2v5h-8v3"/><rect x="10" y="14" width="4" height="7" rx="1"/>',
+  tool:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+  home:'<path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
+  chat:'<path d="M4 5h16v11H9l-5 4z"/>',
+  list:'<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h4"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  shield:'<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  back:'<path d="M15 5 8 12l7 7"/>',
+  pin:'<path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+  check:'<path d="m5 12 5 5 9-10"/>',
+  send:'<path d="M4 12 20 4l-6 16-3-7z"/>',
+  lock:'<rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+  cam:'<rect x="3" y="7" width="13" height="10" rx="2"/><path d="m16 11 5-3v8l-5-3"/>',
+  bell:'<path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+  ai:'<path d="M12 3l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  cal:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+  build:'<rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/>',
+  pix:'<path d="m12 3 9 9-9 9-9-9z"/><path d="m8 12 4-4 4 4-4 4z"/>',
+  people:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c1-3.5 3.5-5 6.5-5s5.5 1.5 6.5 5"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4 1.5 4.5 4"/>',
+  rocket:'<path d="M5 15c-1 1-1.5 4-1.5 4.5S6 19 7 18"/><path d="M9 15l-3-3c1-4 5-8 13-9-1 8-5 12-9 13z"/><circle cx="14.5" cy="9.5" r="1.5"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+};
+const ic = (n, s=22) => `<svg class="i" viewBox="0 0 24 24" style="width:${s}px;height:${s}px" aria-hidden="true">${I[n]}</svg>`;
+const logo = (s=34) => `<svg viewBox="0 0 64 64" width="${s}" height="${s}" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#1463F3"/><path d="M14 30 32 15l18 15v19H14z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M32 52s9-7.5 9-14a9 9 0 0 0-18 0c0 6.5 9 14 9 14z" fill="#5C9BFF" stroke="#fff" stroke-width="2.5"/><circle cx="32" cy="37.5" r="3.4" fill="#fff"/></svg>`;
+
+const CATS = {
+  eletrica:{nome:'Elétrica', icon:'bolt'}, hidraulica:{nome:'Hidráulica', icon:'drop'},
+  limpeza:{nome:'Limpeza', icon:'spark'}, pintura:{nome:'Pintura', icon:'roller'}, reparos:{nome:'Reparos', icon:'tool'}
+};
+const PROS = [
+  {id:'carla',name:'Carla Souza',cat:'hidraulica',role:'Encanadora',woman:1,km:1.2,rating:4.9,reviews:324,price:80,done:312,neighbors:7,color:'#C2417A',x:68,y:30,eta:18,years:5,
+   bio:'Sou encanadora há mais de 5 anos. Trabalho com instalações, manutenção e reparos hidráulicos. Chego com o material básico e explico tudo antes de começar.',
+   tags:['Vazamentos','Torneiras','Desentupimento','Descarga'],svcs:[['Troca de torneira',90],['Reparo de vazamento',120],['Desentupimento de pia',140]]},
+  {id:'jose',name:'José Almeida',cat:'eletrica',role:'Eletricista',km:0.8,rating:4.9,reviews:212,price:70,done:240,neighbors:4,color:'#1463F3',x:40,y:38,eta:12,years:14,
+   bio:'Eletricista MEI há 14 anos, com NR-10. Atendo apartamentos e casas na Vila Mariana e região. Chuveiro, tomadas, disjuntores e quadros de luz.',
+   tags:['Chuveiro','Tomadas','Disjuntor','Iluminação'],svcs:[['Troca de resistência do chuveiro',90],['Instalação de tomada',70],['Troca de disjuntor',110]]},
+  {id:'luana',name:'Luana Martins',cat:'eletrica',role:'Eletricista',woman:1,km:1.9,rating:4.8,reviews:88,price:85,done:95,neighbors:2,color:'#8E44AD',x:80,y:62,eta:25,years:4,
+   bio:'Eletricista formada pelo SENAI. Faço instalações residenciais com cuidado e limpeza no final do serviço.',
+   tags:['Luminárias','Chuveiro','Ventilador de teto'],svcs:[['Instalação de luminária',85],['Troca de chuveiro',120],['Ventilador de teto',150]]},
+  {id:'rosa',name:'Rosa Oliveira',cat:'limpeza',role:'Diarista',woman:1,km:0.6,rating:4.9,reviews:410,price:160,done:520,neighbors:11,color:'#0E8F6A',x:56,y:72,eta:40,years:9,
+   bio:'Diarista há 9 anos, atendo vários apartamentos do seu condomínio. Faxina completa, pós-obra e passadoria.',
+   tags:['Faxina completa','Pós-obra','Passar roupa'],svcs:[['Faxina (apto até 70 m²)',160],['Faxina pesada',220],['Passadoria (4h)',120]]},
+  {id:'joao',name:'João Pereira',cat:'hidraulica',role:'Encanador',km:2.3,rating:4.8,reviews:187,price:75,done:201,neighbors:1,color:'#D35400',x:22,y:24,eta:30,years:8,
+   bio:'Encanador com 8 anos de experiência. Atendo emergências até as 22h.',
+   tags:['Emergências','Caixa d’água','Aquecedor'],svcs:[['Visita técnica',75],['Limpeza de caixa d’água',200]]},
+  {id:'fernanda',name:'Fernanda Lima',cat:'hidraulica',role:'Encanadora',woman:1,km:3.1,rating:5.0,reviews:96,price:90,done:110,neighbors:0,color:'#B03A2E',x:88,y:20,eta:35,years:6,
+   bio:'Encanadora e instaladora de louças. Atendimento só com hora marcada.',
+   tags:['Louças','Vazamentos','Torneiras'],svcs:[['Instalação de vaso sanitário',180],['Reparo de vazamento',130]]},
+  {id:'beatriz',name:'Beatriz Rocha',cat:'pintura',role:'Pintora',woman:1,km:3.4,rating:4.8,reviews:61,price:220,done:70,neighbors:3,color:'#2E86C1',x:14,y:70,eta:60,years:5,
+   bio:'Pintura residencial com proteção de móveis e piso. Orçamento por cômodo.',
+   tags:['Pintura de quarto','Massa corrida','Textura'],svcs:[['Quarto até 12 m²',450],['Sala até 20 m²',700]]},
+  {id:'marcos',name:'Marcos Dias',cat:'pintura',role:'Pintor',km:2.7,rating:4.6,reviews:140,price:200,done:160,neighbors:2,color:'#7D6608',x:30,y:84,eta:60,years:11,
+   bio:'Pintor há 11 anos. Faço também pequenos reparos em gesso.',
+   tags:['Pintura','Gesso','Mofo'],svcs:[['Quarto até 12 m²',420],['Tratamento de mofo',250]]},
+  {id:'eduardo',name:'Eduardo Nunes',cat:'reparos',role:'Montador e marido de aluguel',km:1.5,rating:4.7,reviews:133,price:90,done:150,neighbors:5,color:'#566573',x:46,y:16,eta:30,years:7,
+   bio:'Monto móveis, instalo prateleiras, cortinas, suportes de TV e faço pequenos reparos.',
+   tags:['Montar móveis','Suporte de TV','Prateleiras'],svcs:[['Montagem de guarda-roupa',220],['Suporte de TV',110],['Instalar prateleiras',90]]},
+];
+const REVIEWS = [
+  ['Patrícia, apto 34','Chegou no horário, explicou o problema e deixou tudo limpo. Recomendo!'],
+  ['Renato, bloco B','Preço combinado foi exatamente o cobrado. Muito educado(a).'],
+  ['Dona Célia, apto 12','Me senti segura o tempo todo. Já chamei de novo.'],
+];
+const pro = id => PROS.find(p => p.id === id);
+const money = n => 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits: n%1?2:0, maximumFractionDigits:2});
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const now = () => new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+const initials = n => n.split(' ').map(w=>w[0]).slice(0,2).join('');
+const av = (p,s=48) => `<div class="av" style="width:${s}px;height:${s}px;background:${p.color};font-size:${s*.36}px">${initials(p.name)}</div>`;
+const km = n => n.toString().replace('.',',') + ' km';
+const rt = n => n.toFixed(1).replace('.',',');
+
+function classify(t){
+  t = t.toLowerCase();
+  const urgent = /urgente|agora|queimou|vazando|vazamento|alag|sem luz|curto|faísca|entupi/.test(t);
+  const rules = [
+    ['eletrica',/chuveiro|tomada|luz|disjuntor|fio|fiação|lâmpada|lampada|energia|curto|faísca|quadro/,'Pode ser resistência queimada, disjuntor ou fiação. Um eletricista resolve em uma visita.',[70,150]],
+    ['hidraulica',/vaz|cano|pia|torneira|descarga|entup|ralo|água|agua|privada|vaso/,'Parece um problema hidráulico: vedação, sifão ou conexão. Normalmente resolvido no mesmo dia.',[80,180]],
+    ['limpeza',/faxina|limpeza|limpar|diarista|passar roupa|pós-obra|pos-obra/,'Serviço de limpeza. O preço varia com o tamanho do imóvel.',[140,240]],
+    ['pintura',/pint|parede|mofo|tinta|massa/,'Serviço de pintura. Peça orçamento por cômodo para comparar.',[250,700]],
+    ['reparos',/móve|move|montar|prateleira|furo|cortina|suporte|tv|porta|armário|armario/,'Pequeno reparo ou montagem. Profissionais de reparos gerais atendem rápido.',[80,220]],
+  ];
+  for (const [cat,re,hint,range] of rules) if (re.test(t)) return {cat,hint,range,urgent};
+  return null;
+}
+
+/* ---------- state ---------- */
+const S = {
+  view:'splash', p:{}, stack:[], mode:'agora', cat:null, filter:'todos', ptab:'sobre',
+  prefs:{women:false, record:true, share:true}, threads:{}, orders:[], destaque:false,
+  assist:{text:'',res:null}, quoteEdit:null, rating:0,
+  requests:[
+    {id:'r1',client:'Mariana C.',text:'O chuveiro queimou e estou sem água quente.',km:0.8,urgent:true,sent:null},
+    {id:'r2',client:'Seu Antônio',text:'Trocar 3 tomadas da sala para o padrão novo.',km:1.4,urgent:false,sent:null},
+    {id:'r3',client:'Juliana R.',text:'Disjuntor desarma quando ligo o micro-ondas.',km:2.1,urgent:true,sent:null},
+  ]
+};
+const TABS = ['home','search','orders','chats','me'];
+function go(view, p={}){ S.stack.push({view:S.view,p:S.p}); S.view=view; S.p=p; render(true); }
+function tab(view){ S.stack=[]; S.view=view; S.p={}; render(true); }
+function back(){ const b=S.stack.pop(); if(b){S.view=b.view;S.p=b.p;} else S.view='home'; render(true); }
+function replace(view,p={}){ S.view=view; S.p=p; render(true); }
+
+let toastT;
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2400); }
+
+/* ---------- shared pieces ---------- */
+function header(title, right=''){
+  return `<div class="hdr"><button class="iconbtn" data-act="back" aria-label="Voltar">${ic('back')}</button><h1>${title}</h1>${right}</div>`;
+}
+function nav(){
+  const unread = Object.values(S.threads).some(t=>t.unread);
+  const items=[['home','home','Início'],['search','search','Buscar'],['orders','list','Pedidos'],['chats','chat','Chat'],['me','user','Perfil']];
+  return `<nav class="nav">${items.map(([v,i,l])=>`<button class="${S.view===v?'on':''}" data-tab="${v}">${ic(i)}${l}${v==='chats'&&unread?'<span class="dot"></span>':''}</button>`).join('')}</nav>`;
+}
+function sorted(list){
+  const arr=[...list];
+  arr.sort((a,b)=> S.mode==='agora' ? a.km-b.km : (b.rating-a.rating)||(b.reviews-a.reviews));
+  if (S.destaque){ const i=arr.findIndex(p=>p.id==='jose'); if(i>0) arr.unshift(arr.splice(i,1)[0]); }
+  return arr;
+}
+function proRow(p){
+  return `<button class="panel prow" data-go="profile" data-id="${p.id}">
+    ${av(p,52)}
+    <div class="body">
+      <div class="name">${p.name} <span class="verified">${ic('shield',16)}</span></div>
+      <div class="muted small">${p.role}</div>
+      <div class="meta"><span>${ic('pin',14)} ${km(p.km)}</span><span><span class="star">★</span> ${rt(p.rating)} (${p.reviews})</span>${S.mode==='agora'?`<span>${ic('clock',14)} chega em ~${p.eta} min</span>`:''}</div>
+      <div class="pills">${p.woman?'<span class="pill">Mulher</span>':''}${p.neighbors?`<span class="pill ok">${p.neighbors} vizinhos recomendam</span>`:''}${S.destaque&&p.id==='jose'?'<span class="pill warn">Destaque</span>':''}</div>
+      <div class="price">A partir de ${money(p.price)}</div>
+    </div></button>`;
+}
+
+/* ---------- views ---------- */
+const V = {};
+V.splash = () => `<div class="splash">
+  <div class="hero">
+    <div class="logo-anim">${logo(104)}</div>
+    <h1>Vizinho <b>PRO</b></h1>
+    <p>O profissional de confiança do seu bairro.</p>
+  </div>
+  <div class="skyline" aria-hidden="true">${[40,62,30,70,48,58,26,66,36,52].map(h=>`<i style="height:${h}px"></i>`).join('')}</div>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <button class="btn" data-tab="home">Encontrar um profissional</button>
+    <button class="btn ghost" data-go="proMode">Sou profissional</button>
+  </div></div>`;
+
+V.home = () => {
+  const recs = PROS.filter(p=>p.neighbors>=4).sort((a,b)=>b.neighbors-a.neighbors);
+  const near = sorted(PROS).slice(0,3);
+  return `<div class="hdr" style="border:0"><div class="brand">${logo(30)} Vizinho <b>PRO</b></div>
+    <button class="iconbtn" aria-label="Notificações" data-act="notif">${ic('bell')}</button></div>
+  <div class="scroll">
+    <div class="pad" style="background:var(--surface);padding-bottom:16px;border-bottom:1px solid var(--line)">
+      <div class="muted small" style="display:flex;gap:6px;align-items:center;margin-bottom:14px">${ic('pin',16)} Condomínio Jardim Aurora, Vila Mariana</div>
+      <div class="seg" role="tablist" aria-label="Tipo de necessidade">
+        <button class="${S.mode==='agora'?'on urg':''}" data-act="mode" data-v="agora">${ic('clock',18)} Preciso agora</button>
+        <button class="${S.mode==='agendar'?'on':''}" data-act="mode" data-v="agendar">${ic('cal',18)} Quero agendar</button>
+      </div>
+      <p class="muted tiny" style="margin:8px 2px 14px">${S.mode==='agora'?'Mostrando quem está mais perto e chega mais rápido.':'Mostrando os mais bem avaliados para você comparar com calma.'}</p>
+      <button class="searchbar" data-go="assist">${ic('search',20)} Conte o que aconteceu<span class="ai">${ic('ai',20)}</span></button>
+    </div>
+    <div style="margin-top:18px" class="cats">${Object.entries(CATS).map(([k,c])=>`<button class="cat" data-act="cat" data-v="${k}"><span>${ic(c.icon,24)}</span>${c.nome}</button>`).join('')}</div>
+    <button class="banner" data-go="safety"><div class="ic">${ic('shield',26)}</div><div><strong>Mais segurança para você</strong><p>Documentos verificados, avaliações de vizinhos e pagamento protegido.</p></div></button>
+    <div class="sec"><h2>Recomendados no seu prédio</h2></div>
+    <div class="hscroll">${recs.map(p=>`<button class="panel hcard" data-go="profile" data-id="${p.id}">${av(p,44)}<strong style="font-size:14px">${p.name.split(' ')[0]}</strong><span class="muted tiny">${p.role}</span><span class="pill ok">${ic('people',13)} ${p.neighbors} vizinhos</span></button>`).join('')}</div>
+    <div class="sec"><h2>${S.mode==='agora'?'Perto de você agora':'Mais bem avaliados'}</h2><button data-tab="search">Ver todos</button></div>
+    <div class="list" style="padding-bottom:24px">${near.map(proRow).join('')}</div>
+  </div>${nav()}`;
+};
+
+V.search = () => {
+  let list = PROS.filter(p=>!S.cat||p.cat===S.cat);
+  if (S.filter==='mulheres') list=list.filter(p=>p.woman);
+  if (S.filter==='top') list=list.filter(p=>p.rating>=4.8);
+  if (S.filter==='predio') list=list.filter(p=>p.neighbors>0);
+  list = sorted(list);
+  const streets = `<svg class="bg" viewBox="0 0 400 190" preserveAspectRatio="none" aria-hidden="true">
+    <rect x="250" y="110" width="90" height="60" rx="8" fill="var(--park)"/>
+    <g stroke="var(--street)" stroke-width="10" fill="none"><path d="M0 60 H400M0 140 H400M90 0 V190M210 0 V190M320 0 V190"/><path d="M0 190 L400 10" stroke-width="7"/></g></svg>`;
+  return `<div class="hdr"><h1>Buscar profissional</h1><button class="iconbtn" data-go="assist" aria-label="Descrever problema">${ic('ai')}</button></div>
+  <div class="scroll">
+    <div class="map">${streets}<span class="maplabel">${list.length} profissionais perto</span><div class="me-dot" title="Você"></div>
+      ${list.map(p=>`<button class="mpin ${p.woman?'woman':''}" style="left:${p.x}%;top:${p.y+12}%" data-go="profile" data-id="${p.id}" aria-label="${p.name}"><b>${initials(p.name)}</b></button>`).join('')}
+    </div>
+    <div class="chips">${[[null,'Todas'],...Object.entries(CATS).map(([k,c])=>[k,c.nome])].map(([k,n])=>`<button class="chip ${S.cat===k?'on':''}" data-act="setcat" data-v="${k||''}">${n}</button>`).join('')}</div>
+    <div class="chips" style="padding-top:6px">${[['todos','Todos'],['mulheres','Profissionais mulheres'],['top','Nota 4,8+'],['predio','Indicados por vizinhos']].map(([k,n])=>`<button class="chip ${S.filter===k?'on':''}" data-act="filter" data-v="${k}">${n}</button>`).join('')}</div>
+    <p class="muted tiny pad" style="margin:8px 0">${S.mode==='agora'?'Ordenado por distância (modo “Preciso agora”)':'Ordenado por avaliação (modo “Quero agendar”)'}</p>
+    <div class="list" style="padding-bottom:24px">${list.length?list.map(proRow).join(''):`<div class="empty"><p>Nenhum profissional com esses filtros. Tente outra categoria ou remova um filtro.</p></div>`}</div>
+  </div>${nav()}`;
+};
+
+V.profile = ({id}) => {
+  const p=pro(id);
+  const body = S.ptab==='sobre' ? `<p>${p.bio}</p><strong style="display:block;margin:6px 0 10px">Especialidades</strong><div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="panel" style="margin-top:18px;padding:4px 0">
+        <div class="feat">${'<div class="ic">'+ic('shield')+'</div>'}<div><strong>Identidade e antecedentes verificados</strong><span class="muted small">Documento com foto e certidão conferidos pelo Vizinho PRO.</span></div></div>
+      </div>`
+    : S.ptab==='aval' ? REVIEWS.map(([n,t])=>`<div class="review"><div style="display:flex;justify-content:space-between"><strong class="small">${n}</strong><span class="star">★★★★★</span></div><p class="small muted" style="margin:4px 0 0">${t}</p></div>`).join('')
+    : p.svcs.map(([n,v])=>`<div class="svc"><span>${n}</span><strong>${money(v)}</strong></div>`).join('')+`<p class="muted tiny" style="margin-top:12px">Preços de referência. O valor final é combinado no chat antes do serviço e não muda no dia.</p>`;
+  return `${header('')}
+  <div class="scroll">
+    <div class="phead">
+      <div style="display:flex;justify-content:center">${av(p,96)}</div>
+      <h2>${p.name} <span class="verified">${ic('shield',20)}</span></h2>
+      <div class="muted">${p.role}${p.woman?' <span class="pill">Mulher</span>':''}</div>
+      <div style="margin-top:6px"><span class="star">★</span> <strong>${rt(p.rating)}</strong> <span class="muted small">(${p.reviews} avaliações)</span></div>
+      <div class="stats"><div><strong>${km(p.km)}</strong>de você</div><div><strong>${p.done}</strong>serviços</div><div><strong>${p.years} anos</strong>de experiência</div></div>
+    </div>
+    ${p.neighbors?`<div class="nbadge"><span class="ic">${ic('build')}</span><div><strong>${p.neighbors} vizinhos do Jardim Aurora</strong> já contrataram e recomendam.</div></div>`:''}
+    <div class="tabs">${[['sobre','Sobre'],['aval','Avaliações'],['svc','Serviços']].map(([k,n])=>`<button class="${S.ptab===k?'on':''}" data-act="ptab" data-v="${k}">${n}</button>`).join('')}</div>
+    <div class="tabbody">${body}</div>
+  </div>
+  <div class="footer"><button class="btn ghost" style="flex:1" data-act="openchat" data-id="${p.id}">Conversar</button><button class="btn" style="flex:1.4" data-act="openchat" data-id="${p.id}" data-q="1">Pedir orçamento</button></div>`;
+};
+
+function thread(id){
+  if(!S.threads[id]){ const p=pro(id); S.threads[id]={msgs:[{from:'pro',text:`Olá, Mariana! Sou ${p.name.split(' ')[0]}, ${p.role.toLowerCase()} aqui da região. Me conta o que aconteceu? Se puder, mande uma foto.`,t:now()}],typing:false,unread:false}; }
+  return S.threads[id];
+}
+V.chat = ({id}) => {
+  const p=pro(id), th=thread(id); th.unread=false;
+  const showRec = S.prefs.record && !p.woman;
+  const hasMe = th.msgs.some(m=>m.from==='me');
+  const sugg = ['O chuveiro queimou','Está vazando embaixo da pia','Quero agendar uma faxina','Preciso montar um móvel'];
+  const msgs = th.msgs.map((m,i)=> m.type==='quote' ? `<div class="quote">
+      <div class="muted small">Orçamento de ${p.name.split(' ')[0]}</div>
+      <strong>${esc(m.service)}</strong>
+      <div class="val">${money(m.price)}</div>
+      <div class="small muted" style="margin-bottom:12px">Preço fechado: não muda no dia. Você paga via Pix e o valor fica protegido até confirmar o serviço.</div>
+      ${m.status==='open'?`<button class="btn" data-act="accept" data-id="${id}" data-i="${i}">${ic('pix',18)} Aceitar e pagar via Pix</button>`:`<span class="pill ok">${ic('check',13)} Orçamento aceito</span>`}
+    </div>` : `<div class="msg ${m.from}">${esc(m.text)}<time>${m.t}</time></div>`).join('');
+  return `<div class="hdr"><button class="iconbtn" data-act="back" aria-label="Voltar">${ic('back')}</button>${av(p,38)}<div style="flex:1"><strong>${p.name}</strong><div class="tiny" style="color:var(--ok)">Online</div></div><button class="iconbtn" data-go="profile" data-id="${id}" aria-label="Ver perfil">${ic('user')}</button></div>
+  ${showRec?`<div class="notice">${ic('cam',18)} Atendimento gravado para sua segurança. Você pode mudar isso no seu perfil.</div>`:''}
+  <div class="scroll" id="msgs"><div class="msgs">${msgs}${th.typing?`<div class="typing">${p.name.split(' ')[0]} está digitando…</div>`:''}</div>
+  ${!hasMe?`<div class="chips" style="flex-wrap:wrap;padding-bottom:14px">${sugg.map(s=>`<button class="chip" data-act="sugg" data-v="${s}">${s}</button>`).join('')}</div>`:''}</div>
+  <form class="composer" data-form="send" data-id="${id}"><input id="msgin" placeholder="Digite uma mensagem" autocomplete="off" aria-label="Mensagem"><button class="send" aria-label="Enviar">${ic('send',20)}</button></form>`;
+};
+
+V.chats = () => {
+  const ids=Object.keys(S.threads);
+  return `<div class="hdr"><h1>Conversas</h1></div><div class="scroll">${ids.length?`<div class="list" style="padding-top:14px">${ids.map(id=>{const p=pro(id),t=S.threads[id],l=t.msgs[t.msgs.length-1];
+    return `<button class="panel prow" data-act="openchat" data-id="${id}">${av(p,48)}<div class="body"><div class="name">${p.name}${t.unread?' <span class="pill warn">Nova</span>':''}</div><div class="muted small" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${l.type==='quote'?'Orçamento: '+money(l.price):esc(l.text)}</div></div></button>`}).join('')}</div>`
+    :`<div class="empty"><div class="ic">${ic('chat',30)}</div><p><strong>Nenhuma conversa ainda</strong></p><p class="muted small" style="margin:6px 0 18px">Abra o perfil de um profissional e peça um orçamento.</p><button class="btn sm" style="margin:auto" data-tab="search">Buscar profissional</button></div>`}</div>${nav()}`;
+};
+
+const STEPS=[['Aguardando pagamento','Pague via Pix para confirmar o pedido.'],['Pagamento protegido','O valor fica guardado pelo Vizinho PRO.'],['A caminho','O profissional saiu para o seu endereço.'],['Em atendimento','Serviço em andamento.'],['Profissional concluiu','Confira se ficou tudo certo.'],['Pagamento liberado','Você confirmou e o profissional recebeu.']];
+V.pix = ({oid}) => {
+  const o=S.orders.find(x=>x.id===oid), p=pro(o.pro);
+  let seed=oid*9301; const rnd=()=>((seed=(seed*9301+49297)%233280)/233280);
+  const n=23, cells=[]; for(let y=0;y<n;y++)for(let x=0;x<n;x++){const f=(x<7&&y<7)||(x>=n-7&&y<7)||(x<7&&y>=n-7); if(f){const fx=x>=n-7?x-(n-7):x, fy=y>=n-7?y-(n-7):y; if(fx===0||fy===0||fx===6||fy===6||(fx>1&&fx<5&&fy>1&&fy<5))cells.push([x,y]);} else if(rnd()>.52)cells.push([x,y]);}
+  const code='00020126580014BR.GOV.BCB.PIX0136vizinhopro-'+oid+'5204000053039865406'+o.price.toFixed(2)+'5802BR5913VIZINHO PRO6009SAO PAULO';
+  return `${header('Pagamento via Pix')}<div class="scroll"><div class="pad" style="padding-top:20px;text-align:center">
+    <div class="muted small">${esc(o.service)} com ${p.name}</div>
+    <div style="font-size:34px;font-weight:800;letter-spacing:-.03em;margin:4px 0 16px">${money(o.price)}</div>
+    <svg class="qr" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="QR Code Pix de exemplo">${cells.map(([x,y])=>`<rect x="${x}" y="${y}" width="1" height="1" fill="#0A1F4D"/>`).join('')}</svg>
+    <p class="muted tiny" style="margin:10px 0 6px">Ou use o Pix copia e cola</p>
+    <div class="code">${code.slice(0,72)}…</div>
+    <button class="btn quiet sm" style="margin:10px auto 0" data-act="copy" data-v="${code}">${ic('copy',18)} Copiar código</button>
+    <div class="panel" style="text-align:left;margin-top:20px"><div class="feat"><div class="ic">${ic('lock')}</div><div><strong>Seu dinheiro fica protegido</strong><span class="muted small">O Vizinho PRO guarda o valor e só repassa a ${p.name.split(' ')[0]} quando você confirmar que o serviço foi bem feito.</span></div></div></div>
+  </div></div><div class="footer"><button class="btn" data-act="paid" data-id="${oid}">Já fiz o Pix</button></div>`;
+};
+
+V.order = ({oid}) => {
+  const o=S.orders.find(x=>x.id===oid), p=pro(o.pro);
+  let action='';
+  if (o.step>=1&&o.step<=3) action=`<button class="btn quiet" data-act="step" data-id="${oid}">Simular próxima etapa</button>`;
+  if (o.step===4) action=`<button class="btn ok" data-act="confirm" data-id="${oid}">${ic('check',18)} Confirmar e liberar ${money(o.price)}</button><button class="btn ghost" style="margin-top:10px" data-act="problem">Relatar um problema</button>`;
+  if (o.step===5&&!o.rated) action=`<div class="panel" style="padding:16px;text-align:center"><strong>Como foi com ${p.name.split(' ')[0]}?</strong><div class="rate">${[1,2,3,4,5].map(n=>`<button class="${S.rating>=n?'on':''}" data-act="star" data-v="${n}" aria-label="${n} estrelas">★</button>`).join('')}</div><textarea id="revtxt" class="field" rows="3" placeholder="Conte para seus vizinhos como foi (opcional)"></textarea><button class="btn" style="margin-top:10px" data-act="rate" data-id="${oid}" ${S.rating?'':'disabled'}>Enviar avaliação</button></div>`;
+  if (o.rated) action=`<div class="nbadge" style="margin:0">${ic('check')} Avaliação enviada. Ela aparece para os vizinhos do Jardim Aurora.</div>`;
+  return `${header('Pedido #'+oid)}<div class="scroll">
+    <div class="pad" style="padding-top:16px"><div class="panel prow">${av(p,48)}<div class="body"><div class="name">${p.name}</div><div class="muted small">${esc(o.service)}</div></div><strong>${money(o.price)}</strong></div></div>
+    <div class="sec"><h2>Acompanhamento</h2></div>
+    <div class="tl">${STEPS.map(([t,d],i)=>`<div class="step ${i<o.step||o.step===5?'done':i===o.step?'now':''}"><div class="b">${i<o.step||o.step===5?ic('check',14):i+1}</div><div><strong>${t}</strong><span class="muted small">${d}</span></div></div>`).join('')}</div>
+    <div class="pad" style="padding-bottom:24px">${action}</div>
+  </div>`;
+};
+
+V.orders = () => `<div class="hdr"><h1>Seus pedidos</h1></div><div class="scroll">${S.orders.length?`<div class="list" style="padding-top:14px">${S.orders.slice().reverse().map(o=>{const p=pro(o.pro);return `<button class="panel prow" data-go="${o.step===0?'pix':'order'}" data-oid="${o.id}">${av(p,48)}<div class="body"><div class="name">${esc(o.service)}</div><div class="muted small">${p.name}</div><div class="pills"><span class="pill ${o.step===5?'ok':o.step===4?'warn':''}">${STEPS[o.step][0]}</span></div></div><strong>${money(o.price)}</strong></button>`}).join('')}</div>`
+  :`<div class="empty"><div class="ic">${ic('list',30)}</div><p><strong>Nenhum pedido ainda</strong></p><p class="muted small" style="margin:6px 0 18px">Conte o que aconteceu e encontre alguém perto de você.</p><button class="btn sm" style="margin:auto" data-go="assist">Descrever o problema</button></div>`}</div>${nav()}`;
+
+V.assist = () => {
+  const r=S.assist.res;
+  const ex=['O chuveiro queimou agora de manhã','Está vazando água embaixo da pia','Quero uma faxina toda semana','Pintar o quarto do bebê','Montar um guarda-roupa'];
+  return `${header('Conte o que aconteceu')}<div class="scroll"><div class="pad" style="padding-top:18px">
+    <p class="muted small" style="margin-bottom:12px">Escreva do seu jeito. O assistente identifica o tipo de serviço, a urgência e uma faixa de preço comum na região.</p>
+    <textarea id="astxt" class="field" rows="4" placeholder="Ex.: o chuveiro parou de esquentar e cheira a queimado">${esc(S.assist.text)}</textarea>
+    <div class="chips" style="flex-wrap:wrap;padding:10px 0">${ex.map(e=>`<button class="chip" data-act="ex" data-v="${e}">${e}</button>`).join('')}</div>
+    <button class="btn" data-act="analyze">${ic('ai',18)} Analisar</button>
+    ${r===false?`<div class="panel" style="padding:16px;margin-top:16px"><strong>Não consegui identificar o serviço.</strong><p class="muted small" style="margin-top:4px">Tente citar o que quebrou ou o cômodo, como “torneira da cozinha” ou “tomada da sala”. Ou escolha uma categoria na busca.</p></div>`:''}
+    ${r?`<div class="panel" style="padding:16px;margin:16px 0 24px">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><span style="color:var(--brand)">${ic(CATS[r.cat].icon)}</span><strong style="font-size:17px">${CATS[r.cat].nome}</strong>${r.urgent?'<span class="pill warn">Urgente</span>':'<span class="pill">Pode agendar</span>'}</div>
+      <p class="small">${r.hint}</p>
+      <p class="small" style="margin:8px 0 14px"><strong>Faixa comum na região:</strong> ${money(r.range[0])} a ${money(r.range[1])}</p>
+      <button class="btn" data-act="seeAssist">Ver ${PROS.filter(p=>p.cat===r.cat).length} profissionais ${r.urgent?'mais perto':'mais bem avaliados'}</button>
+    </div>`:''}
+  </div></div>`;
+};
+
+V.safety = () => `${header('Segurança')}<div class="scroll"><div class="pad" style="padding:20px 18px 0;text-align:center"><h2 style="font-size:22px;letter-spacing:-.02em">Seu conforto e segurança vêm primeiro</h2><p class="muted small" style="margin:8px 0 18px">Para quem vai abrir a porta de casa para alguém, confiança pesa mais que preço.</p></div>
+  <div class="panel" style="margin:0 18px">${[
+    ['shield','Profissionais verificados','Documento com foto e certidão de antecedentes conferidos antes do primeiro serviço.'],
+    ['people','Avaliações de vizinhos reais','Só avalia quem contratou pelo app. Você vê quem do seu prédio já recomendou.'],
+    ['user','Escolha profissionais mulheres','Filtre a busca para ver apenas profissionais mulheres.'],
+    ['cam','Gravação do atendimento','Se preferir, o atendimento é gravado e fica disponível para você por 30 dias.'],
+    ['lock','Pagamento protegido','O valor só é liberado depois que você confirma o serviço.'],
+    ['pin','Compartilhe com alguém de confiança','Um familiar acompanha o horário de chegada e saída do profissional.'],
+  ].map(([i,t,d])=>`<div class="feat"><div class="ic">${ic(i)}</div><div><strong>${t}</strong><span class="muted small">${d}</span></div></div>`).join('')}</div>
+  <div class="pad" style="padding:18px"><button class="btn" data-act="back">Entendi</button></div></div>`;
+
+V.me = () => {
+  const tg=(k,t,d)=>`<button class="toggle" data-act="pref" data-v="${k}" role="switch" aria-checked="${S.prefs[k]}"><div class="t"><strong>${t}</strong><span>${d}</span></div><div class="sw ${S.prefs[k]?'on':''}"></div></button>`;
+  return `<div class="hdr"><h1>Perfil</h1></div><div class="scroll">
+  <div class="pad" style="padding-top:18px;display:flex;gap:14px;align-items:center"><div class="av" style="width:64px;height:64px;background:var(--navy-2);font-size:24px">MC</div><div><strong style="font-size:18px">Mariana Costa</strong><div class="muted small">Condomínio Jardim Aurora, apto 52</div></div></div>
+  <div class="sec"><h2>Segurança</h2></div>
+  <div class="panel" style="margin:0 18px">${tg('women','Priorizar profissionais mulheres','A busca já abre com esse filtro.')}${tg('record','Gravar atendimento','Quando a profissional não for mulher.')}${tg('share','Avisar contato de confiança','Sua mãe recebe a hora de chegada e saída.')}</div>
+  <div class="sec"><h2>Pagamento</h2></div>
+  <div class="panel" style="margin:0 18px"><div class="feat"><div class="ic">${ic('pix')}</div><div><strong>Pix</strong><span class="muted small">Forma padrão. Cartão de crédito também aceito.</span></div></div></div>
+  <div class="pad" style="padding:22px 18px 28px;display:flex;flex-direction:column;gap:10px"><button class="btn ghost" data-go="proMode">${ic('briefcase'in I?'tool':'tool',18)} Abrir modo profissional</button><button class="btn quiet" data-act="restart">Voltar à tela inicial</button></div>
+  </div>${nav()}`;
+};
+
+V.proMode = () => {
+  const sentCount=S.requests.filter(r=>r.sent).length;
+  return `<div class="prohero">
+    <div style="display:flex;align-items:center;gap:10px"><button class="iconbtn" style="color:#fff" data-act="back" aria-label="Voltar">${ic('back')}</button><div style="flex:1"><div style="opacity:.8;font-size:13px">Modo profissional</div><strong style="font-size:20px">Olá, José</strong></div>${av(pro('jose'),44)}</div>
+    <div class="kpis"><div><strong>R$ 528</strong>recebidos na semana</div><div><strong>${6+sentCount}</strong>orçamentos enviados</div><div><strong>4,9 ★</strong>212 avaliações</div></div>
+  </div>
+  <div class="scroll">
+    <div class="pad" style="padding-top:16px"><button class="panel toggle" style="border:1px solid ${S.destaque?'var(--brand)':'var(--line)'};border-radius:18px" data-act="destaque" role="switch" aria-checked="${S.destaque}">
+      <span style="color:var(--brand)">${ic('rocket',26)}</span><div class="t"><strong>Plano Destaque, R$ 29,90/mês</strong><span>${S.destaque?'Ativo: você aparece em primeiro nas buscas da Vila Mariana e Aclimação.':'Apareça em primeiro nas buscas do seu bairro.'}</span></div><div class="sw ${S.destaque?'on':''}"></div></button></div>
+    <div class="sec"><h2>Pedidos perto de você</h2></div>
+    <div class="list">${S.requests.map(r=>`<div class="panel req">
+      <div style="display:flex;justify-content:space-between;gap:8px"><strong>${r.client}</strong><span class="muted small">${ic('pin',14)} ${km(r.km)}</span></div>
+      <p class="small">${r.text}</p>
+      <div>${r.urgent?'<span class="pill warn">Urgente</span>':'<span class="pill">Agendado</span>'}</div>
+      ${r.sent?`<div class="pill ok" style="align-self:flex-start">${ic('check',13)} Orçamento de ${money(r.sent)} enviado</div>`
+      : S.quoteEdit===r.id?`<div style="display:flex;gap:8px"><input id="qv" class="field" inputmode="decimal" placeholder="Valor em R$" style="padding:10px 12px"><button class="btn sm" data-act="sendq" data-id="${r.id}">Enviar</button></div>`
+      :`<button class="btn sm" style="align-self:flex-start" data-act="editq" data-id="${r.id}">Enviar orçamento</button>`}
+    </div>`).join('')}</div>
+    <div class="sec"><h2>Como você recebe</h2></div>
+    <div class="panel" style="margin:0 18px 28px;padding:16px">
+      <div class="svc"><span>Cliente paga</span><strong>R$ 120</strong></div>
+      <div class="svc"><span>Taxa Vizinho PRO (12%)</span><strong>− R$ 14,40</strong></div>
+      <div class="svc" style="border:0"><span>Você recebe via Pix</span><strong style="color:var(--ok)">R$ 105,60</strong></div>
+      <p class="muted tiny" style="margin-top:6px">O dinheiro cai na sua conta assim que o cliente confirma o serviço. Sem gastar com anúncio.</p>
+    </div>
+  </div>`;
+};
+
+/* ---------- render + events ---------- */
+function render(top){
+  const app=document.getElementById('app');
+  if (S.view==='search' && S.prefs.women && !S._wApplied){ S.filter='mulheres'; S._wApplied=true; }
+  app.innerHTML = V[S.view](S.p);
+  if (S.view==='chat'){ const m=document.getElementById('msgs'); if(m) m.scrollTop=m.scrollHeight; }
+  else if (top){ const sc=app.querySelector('.scroll'); if(sc) sc.scrollTop=0; }
+}
+function proReply(id, userText){
+  const th=thread(id), p=pro(id);
+  th.typing=true; render();
+  setTimeout(()=>{
+    th.typing=false;
+    const c=classify(userText); const svc=p.svcs[0];
+    let service=svc[0], price=svc[1];
+    if (c && c.cat===p.cat){ const m=p.svcs.find(s=>userText.toLowerCase().split(' ').some(w=>w.length>4&&s[0].toLowerCase().includes(w.slice(0,5)))); if(m){service=m[0];price=m[1];} }
+    th.msgs.push({from:'pro',text:`Entendi! Consigo ir ${S.mode==='agora'?`agora, chego em uns ${p.eta} minutos`:'amanhã às 9h'}. Já te mando o orçamento com o preço fechado.`,t:now()});
+    th.msgs.push({type:'quote',service,price,status:'open'});
+    if (S.view==='chat'&&S.p.id===id) render(); else { th.unread=true; toast(`${p.name.split(' ')[0]} enviou um orçamento`); render(); }
+  },1300);
+}
+function sendMsg(id,text){
+  text=text.trim(); if(!text) return;
+  const th=thread(id); th.msgs.push({from:'me',text,t:now()});
+  const already=th.msgs.some(m=>m.type==='quote');
+  render();
+  if(!already) proReply(id,text);
+  else setTimeout(()=>{th.msgs.push({from:'pro',text:'Combinado! Qualquer coisa é só me chamar por aqui.',t:now()}); if(S.view==='chat') render();},1000);
+}
+const A = {
+  back, restart(){S.stack=[];replace('splash');},
+  notif(){toast('Sem notificações novas');},
+  mode(el){S.mode=el.dataset.v; render();},
+  cat(el){S.cat=el.dataset.v; tab('search');},
+  setcat(el){S.cat=el.dataset.v||null; render();},
+  filter(el){S.filter=el.dataset.v; render();},
+  ptab(el){S.ptab=el.dataset.v; render();},
+  openchat(el){ const id=el.dataset.id; thread(id); go('chat',{id}); },
+  sugg(el){ sendMsg(S.p.id, el.dataset.v); },
+  accept(el){ const id=el.dataset.id, th=thread(id), q=th.msgs[+el.dataset.i]; q.status='accepted';
+    const o={id:1000+S.orders.length+Math.floor(Math.random()*8000),pro:id,service:q.service,price:q.price,step:0,rated:false}; S.orders.push(o); go('pix',{oid:o.id}); },
+  copy(el){ try{navigator.clipboard.writeText(el.dataset.v);}catch(e){} toast('Código Pix copiado'); },
+  paid(el){ const o=S.orders.find(x=>x.id===+el.dataset.id); o.step=1; toast('Pagamento recebido e protegido'); replace('order',{oid:o.id}); },
+  step(el){ const o=S.orders.find(x=>x.id===+el.dataset.id); o.step=Math.min(4,o.step+1); render(); },
+  confirm(el){ const o=S.orders.find(x=>x.id===+el.dataset.id); o.step=5; S.rating=0; toast(`${money(o.price)} liberados para ${pro(o.pro).name.split(' ')[0]}`); render(); },
+  problem(){ toast('O pagamento segue retido enquanto analisamos'); },
+  star(el){ S.rating=+el.dataset.v; const t=document.getElementById('revtxt')?.value||''; render(); const n=document.getElementById('revtxt'); if(n) n.value=t; },
+  rate(el){ const o=S.orders.find(x=>x.id===+el.dataset.id); o.rated=true; const p=pro(o.pro); p.reviews++; render(); toast('Obrigado pela avaliação'); },
+  ex(el){ S.assist.text=el.dataset.v; A.analyze(); },
+  analyze(){ const t=document.getElementById('astxt'); if(t) S.assist.text=t.value; if(!S.assist.text.trim()){toast('Escreva o que aconteceu primeiro');return;} S.assist.res=classify(S.assist.text)||false; render(); },
+  seeAssist(){ const r=S.assist.res; S.cat=r.cat; S.mode=r.urgent?'agora':'agendar'; S.filter='todos'; tab('search'); },
+  pref(el){ const k=el.dataset.v; S.prefs[k]=!S.prefs[k]; if(k==='women'){S._wApplied=false; if(!S.prefs.women) S.filter='todos';} render(); },
+  destaque(){ S.destaque=!S.destaque; toast(S.destaque?'Plano Destaque ativado':'Plano Destaque desativado'); render(); },
+  editq(el){ S.quoteEdit=el.dataset.id; render(); document.getElementById('qv')?.focus(); },
+  sendq(el){ const v=parseFloat((document.getElementById('qv').value||'').replace(',','.')); if(!v){toast('Informe um valor');return;} S.requests.find(r=>r.id===el.dataset.id).sent=v; S.quoteEdit=null; toast('Orçamento enviado'); render(); },
+};
+document.getElementById('app').addEventListener('click', e=>{
+  const t=e.target.closest('[data-tab],[data-go],[data-act]'); if(!t) return;
+  if (t.dataset.tab) return tab(t.dataset.tab);
+  if (t.dataset.go){ const p={}; if(t.dataset.id)p.id=t.dataset.id; if(t.dataset.oid)p.oid=+t.dataset.oid; if(t.dataset.go==='profile')S.ptab='sobre'; return go(t.dataset.go,p); }
+  if (t.dataset.act==='openchat' && t.dataset.q){ const id=t.dataset.id, th=thread(id); go('chat',{id}); return; }
+  A[t.dataset.act] && A[t.dataset.act](t);
+});
+document.getElementById('app').addEventListener('submit', e=>{
+  e.preventDefault(); const f=e.target; if(f.dataset.form==='send'){ const inp=document.getElementById('msgin'); const v=inp.value; inp.value=''; sendMsg(f.dataset.id,v); }
+});
+render();
+</script>
+</body>
+</html>
