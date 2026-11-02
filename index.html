@@ -382,7 +382,7 @@ V.home = () => {
     <button class="iconbtn" aria-label="Notificações" data-act="notif">${ic('bell')}</button></div>
   <div class="scroll">
     <div class="pad" style="background:var(--surface);padding-bottom:16px;border-bottom:1px solid var(--line)">
-      <div class="muted small" style="display:flex;gap:6px;align-items:center;margin-bottom:14px">${ic('pin',16)} Condomínio Jardim Aurora, Centro, Americana</div>
+      <div class="muted small" style="display:flex;gap:6px;align-items:center;margin-bottom:14px">${ic('pin',16)} Condomínio Residencial das Flores, Centro, Americana</div>
       <div class="seg" role="tablist" aria-label="Tipo de necessidade">
         <button class="${S.mode==='agora'?'on urg':''}" data-act="mode" data-v="agora">${ic('clock',18)} Preciso agora</button>
         <button class="${S.mode==='agendar'?'on':''}" data-act="mode" data-v="agendar">${ic('cal',18)} Quero agendar</button>
@@ -438,7 +438,7 @@ V.profile = ({id}) => {
       <div style="margin-top:6px"><span class="star">★</span> <strong>${rt(p.rating)}</strong> <span class="muted small">(${p.reviews} avaliações)</span></div>
       <div class="stats"><div><strong>${km(p.km)}</strong>de você</div><div><strong>${p.done}</strong>serviços</div><div><strong>${p.years} anos</strong>de experiência</div></div>
     </div>
-    ${p.neighbors?`<div class="nbadge"><span class="ic">${ic('build')}</span><div><strong>${p.neighbors} vizinhos do Jardim Aurora</strong> já contrataram e recomendam.</div></div>`:''}
+    ${p.neighbors?`<div class="nbadge"><span class="ic">${ic('build')}</span><div><strong>${p.neighbors} vizinhos do Residencial das Flores</strong> já contrataram e recomendam.</div></div>`:''}
     <div class="tabs">${[['sobre','Sobre'],['aval','Avaliações'],['svc','Serviços']].map(([k,n])=>`<button class="${S.ptab===k?'on':''}" data-act="ptab" data-v="${k}">${n}</button>`).join('')}</div>
     <div class="tabbody">${body}</div>
   </div>
@@ -498,7 +498,7 @@ V.order = ({oid}) => {
   if (o.step>=1&&o.step<=3) action=`<button class="btn quiet" data-act="step" data-id="${oid}">Simular próxima etapa</button>`;
   if (o.step===4) action=`<button class="btn ok" data-act="confirm" data-id="${oid}">${ic('check',18)} Confirmar e liberar ${money(o.price)}</button><button class="btn ghost" style="margin-top:10px" data-act="problem">Relatar um problema</button>`;
   if (o.step===5&&!o.rated) action=`<div class="panel" style="padding:16px;text-align:center"><strong>Como foi com ${p.name.split(' ')[0]}?</strong><div class="rate">${[1,2,3,4,5].map(n=>`<button class="${S.rating>=n?'on':''}" data-act="star" data-v="${n}" aria-label="${n} estrelas">★</button>`).join('')}</div><textarea id="revtxt" class="field" rows="3" placeholder="Conte para seus vizinhos como foi (opcional)"></textarea><button class="btn" style="margin-top:10px" data-act="rate" data-id="${oid}" ${S.rating?'':'disabled'}>Enviar avaliação</button></div>`;
-  if (o.rated) action=`<div class="nbadge" style="margin:0">${ic('check')} Avaliação enviada. Ela aparece para os vizinhos do Jardim Aurora.</div>`;
+  if (o.rated) action=`<div class="nbadge" style="margin:0">${ic('check')} Avaliação enviada. Ela aparece para os vizinhos do Residencial das Flores.</div>`;
   return `${header('Pedido #'+oid)}<div class="scroll">
     <div class="pad" style="padding-top:16px"><div class="panel prow">${av(p,48)}<div class="body"><div class="name">${p.name}</div><div class="muted small">${esc(o.service)}</div></div><strong>${money(o.price)}</strong></div></div>
     ${o.step>=1&&o.step<=4?`<div class="sec"><h2>Quem vai até você</h2></div><div class="panel who">${av(p,112)}<strong style="font-size:17px">${p.name}</strong><span class="pill ok">${ic('shield',13)} Foto verificada com documento</span><p class="muted small" style="margin-top:4px">Confira se é a mesma pessoa antes de abrir a porta. ${p.woman?'Ela':'Ele'} vai dizer este código de segurança:</p><div class="secode">${o.code}</div>${S.prefs.share?`<span class="muted tiny">Sua mãe está acompanhando a chegada e a saída.</span>`:''}</div>`:''}
@@ -543,7 +543,7 @@ V.safety = () => `${header('Segurança')}<div class="scroll"><div class="pad" st
 V.me = () => {
   const tg=(k,t,d)=>`<button class="toggle" data-act="pref" data-v="${k}" role="switch" aria-checked="${S.prefs[k]}"><div class="t"><strong>${t}</strong><span>${d}</span></div><div class="sw ${S.prefs[k]?'on':''}"></div></button>`;
   return `<div class="hdr"><h1>Perfil</h1></div><div class="scroll">
-  <div class="pad" style="padding-top:18px;display:flex;gap:14px;align-items:center"><div class="av" style="width:64px;height:64px;background:var(--navy-2);font-size:24px">MC</div><div><strong style="font-size:18px">Mariana Costa</strong><div class="muted small">Condomínio Jardim Aurora, apto 52</div></div></div>
+  <div class="pad" style="padding-top:18px;display:flex;gap:14px;align-items:center"><div class="av" style="width:64px;height:64px;background:var(--navy-2);font-size:24px">MC</div><div><strong style="font-size:18px">Mariana Costa</strong><div class="muted small">Condomínio Residencial das Flores, apto 52</div></div></div>
   <div class="sec"><h2>Segurança</h2></div>
   <div class="panel" style="margin:0 18px">${tg('women','Priorizar profissionais mulheres','A busca já abre com esse filtro.')}${tg('record','Gravar atendimento','Quando a profissional não for mulher.')}${tg('share','Avisar contato de confiança','Sua mãe recebe a hora de chegada e saída.')}</div>
   <div class="sec"><h2>Pagamento</h2></div>
