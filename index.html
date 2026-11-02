@@ -261,7 +261,7 @@ const PROS = [
    bio:'Sou encanadora há mais de 5 anos. Trabalho com instalações, manutenção e reparos hidráulicos. Chego com o material básico e explico tudo antes de começar.',
    tags:['Vazamentos','Torneiras','Desentupimento','Descarga'],svcs:[['Troca de torneira',90],['Reparo de vazamento',120],['Desentupimento de pia',140]]},
   {id:'jose',name:'José Almeida',cat:'eletrica',role:'Eletricista',km:0.8,rating:4.9,reviews:212,price:70,done:240,neighbors:4,color:'#1463F3',x:40,y:38,eta:12,years:14,
-   bio:'Eletricista MEI há 14 anos, com NR-10. Atendo apartamentos e casas na Vila Mariana e região. Chuveiro, tomadas, disjuntores e quadros de luz.',
+   bio:'Eletricista MEI há 14 anos, com NR-10. Atendo apartamentos e casas no Centro de Americana e região. Chuveiro, tomadas, disjuntores e quadros de luz.',
    tags:['Chuveiro','Tomadas','Disjuntor','Iluminação'],svcs:[['Troca de resistência do chuveiro',90],['Instalação de tomada',70],['Troca de disjuntor',110]]},
   {id:'luana',name:'Luana Martins',cat:'eletrica',role:'Eletricista',woman:1,km:1.9,rating:4.8,reviews:88,price:85,done:95,neighbors:2,color:'#8E44AD',x:80,y:62,eta:25,years:4,
    bio:'Eletricista formada pelo SENAI. Faço instalações residenciais com cuidado e limpeza no final do serviço.',
@@ -382,7 +382,7 @@ V.home = () => {
     <button class="iconbtn" aria-label="Notificações" data-act="notif">${ic('bell')}</button></div>
   <div class="scroll">
     <div class="pad" style="background:var(--surface);padding-bottom:16px;border-bottom:1px solid var(--line)">
-      <div class="muted small" style="display:flex;gap:6px;align-items:center;margin-bottom:14px">${ic('pin',16)} Condomínio Jardim Aurora, Vila Mariana</div>
+      <div class="muted small" style="display:flex;gap:6px;align-items:center;margin-bottom:14px">${ic('pin',16)} Condomínio Jardim Aurora, Centro, Americana</div>
       <div class="seg" role="tablist" aria-label="Tipo de necessidade">
         <button class="${S.mode==='agora'?'on urg':''}" data-act="mode" data-v="agora">${ic('clock',18)} Preciso agora</button>
         <button class="${S.mode==='agendar'?'on':''}" data-act="mode" data-v="agendar">${ic('cal',18)} Quero agendar</button>
@@ -480,7 +480,7 @@ V.pix = ({oid}) => {
   const o=S.orders.find(x=>x.id===oid), p=pro(o.pro);
   let seed=oid*9301; const rnd=()=>((seed=(seed*9301+49297)%233280)/233280);
   const n=23, cells=[]; for(let y=0;y<n;y++)for(let x=0;x<n;x++){const f=(x<7&&y<7)||(x>=n-7&&y<7)||(x<7&&y>=n-7); if(f){const fx=x>=n-7?x-(n-7):x, fy=y>=n-7?y-(n-7):y; if(fx===0||fy===0||fx===6||fy===6||(fx>1&&fx<5&&fy>1&&fy<5))cells.push([x,y]);} else if(rnd()>.52)cells.push([x,y]);}
-  const code='00020126580014BR.GOV.BCB.PIX0136vizinhopro-'+oid+'5204000053039865406'+o.price.toFixed(2)+'5802BR5913VIZINHO PRO6009SAO PAULO';
+  const code='00020126580014BR.GOV.BCB.PIX0136vizinhopro-'+oid+'5204000053039865406'+o.price.toFixed(2)+'5802BR5913VIZINHO PRO6009AMERICANA';
   return `${header('Pagamento via Pix')}<div class="scroll"><div class="pad" style="padding-top:20px;text-align:center">
     <div class="muted small">${esc(o.service)} com ${p.name}</div>
     <div style="font-size:34px;font-weight:800;letter-spacing:-.03em;margin:4px 0 16px">${money(o.price)}</div>
@@ -560,7 +560,7 @@ V.proMode = () => {
   </div>
   <div class="scroll">
     <div class="pad" style="padding-top:16px"><button class="panel toggle" style="border:1px solid ${S.destaque?'var(--brand)':'var(--line)'};border-radius:18px" data-act="destaque" role="switch" aria-checked="${S.destaque}">
-      <span style="color:var(--brand)">${ic('rocket',26)}</span><div class="t"><strong>Plano Destaque, R$ 29,90/mês</strong><span>${S.destaque?'Ativo: você aparece em primeiro nas buscas da Vila Mariana e Aclimação.':'Apareça em primeiro nas buscas do seu bairro.'}</span></div><div class="sw ${S.destaque?'on':''}"></div></button></div>
+      <span style="color:var(--brand)">${ic('rocket',26)}</span><div class="t"><strong>Plano Destaque, R$ 29,90/mês</strong><span>${S.destaque?'Ativo: você aparece em primeiro nas buscas do Centro e do Jardim São Paulo.':'Apareça em primeiro nas buscas do seu bairro.'}</span></div><div class="sw ${S.destaque?'on':''}"></div></button></div>
     <div class="sec"><h2>Pedidos perto de você</h2></div>
     <div class="list">${S.requests.map(r=>`<div class="panel req">
       <div style="display:flex;justify-content:space-between;gap:8px"><strong>${r.client}</strong><span class="muted small">${ic('pin',14)} ${km(r.km)}</span></div>
